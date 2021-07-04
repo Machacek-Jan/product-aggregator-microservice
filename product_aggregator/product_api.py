@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse, abort, fields, marshal_with
 
 from product_aggregator.database import db
-from product_aggregator.product_model import ProductModel
+from product_aggregator.model.product import Product
 
 
 products_post_args = reqparse.RequestParser()
@@ -29,17 +29,17 @@ product_fields = {
 }
 
 
-class Product(Resource):
+class ProductResource(Resource):
     @marshal_with(product_fields)
     def get(self, id):
         """
         Retrieves product with given id from database.
 
         :param id:  id of product to retrieve
-        :return:    ProductModel with given id, 
+        :return:    Product with given id, 
                     404 if product with given id is not found
         """
-        result = ProductModel.query.filter_by(id=id).first()
+        result = Product.query.filter_by(id=id).first()
         if not result:
             abort(404, message=f"Product does not exist")
         return result
@@ -50,11 +50,11 @@ class Product(Resource):
         Updates product with given id in database.
 
         :param id:  id of product to update
-        :return:    ProductModel with given id, 205 on successful update, 
+        :return:    Product with given id, 205 on successful update, 
                     404 if product with given id is not found
         """
         args = products_update_args.parse_args()
-        result = ProductModel.query.filter_by(id=id).first()
+        result = Product.query.filter_by(id=id).first()
         if not result:
             abort(404, message=f"Product does not exist")
 
@@ -76,7 +76,7 @@ class Product(Resource):
         :return:    204 on successful delete, 
                     404 if product with given id is not found
         """
-        result = ProductModel.query.filter_by(id=id).first()
+        result = Product.query.filter_by(id=id).first()
         if not result:
             abort(404, message="Product does not exist")
 
@@ -86,15 +86,15 @@ class Product(Resource):
         return {}, 204
 
 
-class Products(Resource):
+class ProductsResource(Resource):
     @marshal_with(product_fields)
     def get(self):
         """
         Retrieves all products from database.
 
-        :return:    all ProductModels from database
+        :return:    all Products from database
         """
-        results = ProductModel.query.all()
+        results = Product.query.all()
 
         return results, 200
 
@@ -103,10 +103,10 @@ class Products(Resource):
         """
         Creates product and adds it into database.
 
-        :return:    created ProductModel, 201 on successful create
+        :return:    created Product, 201 on successful create
         """
         args = products_post_args.parse_args()
-        product = ProductModel(
+        product = Product(
             name=args['name'], description=args['description'])
 
         db.session.add(product)

@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import product_aggregator.main as main
 from product_aggregator.database import db
-from product_aggregator.product_model import ProductModel
+from product_aggregator.model.product import Product
 
 data_in_testing_database = [
     {"name": "name01", "description": "description01"},
@@ -18,7 +18,7 @@ def init_database(db):
 
 def insert_data_into_database(db, data_to_be_inserted):
     for item in data_to_be_inserted:
-        db.session.add(ProductModel(item['name'], item['description']))
+        db.session.add(Product(item['name'], item['description']))
         db.session.commit()
 
 class TestProductsAPIOperations(TestCase):

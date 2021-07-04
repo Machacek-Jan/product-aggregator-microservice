@@ -7,7 +7,7 @@ from flask import Flask
 from flask_restful import Api
 
 from product_aggregator.database import db
-from product_aggregator.product_api import Product, Products
+from product_aggregator.product_api import ProductResource, ProductsResource
 
 
 def create_app(db_name):
@@ -28,8 +28,8 @@ def create_app(db_name):
 
     # set up products API
     api = Api(app)
-    api.add_resource(Products, '/products')
-    api.add_resource(Product, '/products/<int:id>')
+    api.add_resource(ProductsResource, '/products')
+    api.add_resource(ProductResource, '/products/<int:id>')
 
     return app
 
