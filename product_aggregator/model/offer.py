@@ -13,10 +13,19 @@ class Offer(db.Model):
     price = db.Column(db.Integer, nullable=False)
     items_in_stock = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, product_id, price, items_in_stock):
+    def __init__(self, product_id, id, price, items_in_stock):
         self.product_id = product_id
+        self.id = id
         self.price = price
         self.items_in_stock = items_in_stock
 
     def __repr__(self):
         return f"Offer(id = {self.id}, product_id = {self.product_id}, price = {self.price}, items_in_stock = {self.items_in_stock})"
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'product_id': self.product_id,
+            'price': self.price,
+            'items_in_stock': self.items_in_stock
+        }

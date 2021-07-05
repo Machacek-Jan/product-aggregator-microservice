@@ -1,5 +1,4 @@
 from product_aggregator.database import db
-from product_aggregator.model.offer import Offer
 
 
 class Product(db.Model):
@@ -20,3 +19,10 @@ class Product(db.Model):
 
     def __repr__(self):
         return f"Product(id = {self.id}, name = {self.name}, description = {self.description})"
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description
+        }

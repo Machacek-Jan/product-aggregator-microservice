@@ -7,7 +7,7 @@ from flask import Flask
 from flask_restful import Api
 
 from product_aggregator.database import db
-from product_aggregator.product_api import ProductResource, ProductsResource
+from product_aggregator.product_api import ProductOffersResource, ProductResource, ProductsResource
 
 
 def create_app(db_name):
@@ -26,10 +26,11 @@ def create_app(db_name):
     if not os.path.exists(os.path.join(basedir, db_name)):
         db.create_all()
 
-    # set up products API
+    # set up API
     api = Api(app)
     api.add_resource(ProductsResource, '/products')
     api.add_resource(ProductResource, '/products/<int:id>')
+    api.add_resource(ProductOffersResource, '/products/<int:product_id>/offers')
 
     return app
 
