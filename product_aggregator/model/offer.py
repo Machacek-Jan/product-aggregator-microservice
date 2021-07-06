@@ -29,3 +29,11 @@ class Offer(db.Model):
             'price': self.price,
             'items_in_stock': self.items_in_stock
         }
+
+
+def create_offer(product_id, offer_json_data):
+    return Offer(product_id=product_id, id=offer_json_data['id'], price=offer_json_data['price'], items_in_stock=offer_json_data['items_in_stock'])
+
+
+def create_offers(product_id, offers_json_data):
+    return [create_offer(product_id, offer_json_data) for offer_json_data in offers_json_data]

@@ -8,6 +8,7 @@ from flask_restful import Api
 
 from product_aggregator.database import db
 from product_aggregator.product_api import ProductOffersResource, ProductResource, ProductsResource
+from product_aggregator.update_offers_job import scheduler
 
 
 def create_app(db_name):
@@ -37,4 +38,10 @@ def create_app(db_name):
 
 if __name__ == '__main__':
     app = create_app("database.db")
+    
+    # initialize scheduler
+    scheduler.api_enabled = True
+    scheduler.init_app(app)
+    scheduler.start()
+    
     app.run(debug=True)  # TODO remove debug mode after development

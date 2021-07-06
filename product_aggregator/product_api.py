@@ -1,7 +1,7 @@
 from flask_restful import Resource, abort, fields, marshal_with, reqparse
 
 from product_aggregator.database import db
-from product_aggregator.model.offer import Offer
+from product_aggregator.model.offer import create_offers
 from product_aggregator.model.product import Product
 from product_aggregator.offers_api_controller import get_offers_of_product, register_product
 
@@ -131,8 +131,7 @@ class ProductsResource(Resource):
 
 
 def save_offers_to_db(product, offers_data):
-    offers = [Offer(product_id=product.id, id=offer_data['id'], price=offer_data['price'],
-                    items_in_stock=offer_data['items_in_stock']) for offer_data in offers_data]
+    offers = create_offers(product.id, offers_data)
 
     db.session.add_all(offers)
     db.session.commit()
