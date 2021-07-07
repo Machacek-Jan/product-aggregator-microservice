@@ -1,23 +1,23 @@
 from flask_restful import Resource, abort, fields, marshal_with, reqparse
 
 from product_aggregator.database import db
-from product_aggregator.model.offer import create_offers
 from product_aggregator.model.product import Product
-from product_aggregator.offers_api_controller import get_offers_of_product, register_product
+from product_aggregator.offers_dao import insert_offers_data_to_db
+from product_aggregator.offers_ms_controller import register_product, retrieve_offers_of_product
 
-products_post_args = reqparse.RequestParser()
-products_post_args.add_argument(
+product_post_args = reqparse.RequestParser()
+product_post_args.add_argument(
     "name", type=str, help="Name of the product is required", required=True
 )
-products_post_args.add_argument(
+product_post_args.add_argument(
     "description", type=str, help="Description of the product is required", required=True
 )
 
-products_update_args = reqparse.RequestParser()
-products_update_args.add_argument(
+product_update_args = reqparse.RequestParser()
+product_update_args.add_argument(
     "name", type=str, help="Name of the product"
 )
-products_update_args.add_argument(
+product_update_args.add_argument(
     "description", type=str, help="Description of the product"
 )
 
@@ -60,7 +60,7 @@ class ProductResource(Resource):
         :return:    Product with given id, 205 on successful update, 
                     404 if product with given id is not found
         """
-        args = products_update_args.parse_args()
+        args = product_update_args.parse_args()
         result = Product.query.filter_by(id=id).first()
         if not result:
             abort(404, message=f"Product does not exist")
@@ -109,11 +109,11 @@ class ProductsResource(Resource):
     def post(self):
         """
         Creates product and adds it into database. Register created product to offers 
-        microservise. Retrieves offers of this product and save them to database. 
+        microservise. Retrieves offers of this product and saves them to database. 
 
         :return:    created Product, 201 on successful create
         """
-        args = products_post_args.parse_args()
+        args = product_post_args.parse_args()
         product = Product(
             name=args['name'],
             description=args['description']
@@ -124,20 +124,11 @@ class ProductsResource(Resource):
 
         register_product(product)
 
-        offers_data = get_offers_of_product(product)
+        offers_data = retrieve_offers_of_product(product)
 
-        save_offers_to_db(product, offers_data)
+        insert_offers_data_to_db(product, offers_data)
 
         return product, 201
-
-
-def save_offers_to_db(product, offers_data):
-    if not offers_data:
-        return
-    offers = create_offers(product.id, offers_data)
-
-    db.session.add_all(offers)
-    db.session.commit()
 
 
 class ProductOffersResource(Resource):

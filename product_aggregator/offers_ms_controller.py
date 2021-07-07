@@ -23,14 +23,14 @@ def register_product(product):
             f"Registration of {product} failed with code {response.status_code}")
 
 
-def get_offers_of_product(product):
+def retrieve_offers_of_product(product):
     response = requests.get(
         get_product_offers_url(product.id),
         headers={'Bearer': ACCESS_TOKEN}
     )
-
+    
     if response.status_code == 200:
         return response.json()
     else:
         print(
-            f"Receiving of offers of {product} failed with code {response.status_code}")
+            f"Retrieving of offers of {product} failed with code {response.status_code}")
