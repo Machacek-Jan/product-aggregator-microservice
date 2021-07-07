@@ -22,5 +22,5 @@ if os.environ.get('OFFERS_MS_ACCESS_TOKEN') is None:
     with open(path_to_dotenv_file, 'a') as f:
         f.write(f"OFFERS_MS_ACCESS_TOKEN={access_token}\n")
 
-
+load_dotenv(path_to_dotenv_file)
 OFFERS_MS_ACCESS_TOKEN = os.environ.get('OFFERS_MS_ACCESS_TOKEN')
