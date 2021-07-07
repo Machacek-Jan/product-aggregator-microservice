@@ -108,7 +108,8 @@ class ProductsResource(Resource):
     @marshal_with(product_fields)
     def post(self):
         """
-        Creates product and adds it into database.
+        Creates product and adds it into database. Register created product to offers 
+        microservise. Retrieves offers of this product and save them to database. 
 
         :return:    created Product, 201 on successful create
         """
@@ -131,6 +132,8 @@ class ProductsResource(Resource):
 
 
 def save_offers_to_db(product, offers_data):
+    if not offers_data:
+        return
     offers = create_offers(product.id, offers_data)
 
     db.session.add_all(offers)

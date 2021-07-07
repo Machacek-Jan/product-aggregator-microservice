@@ -1,9 +1,10 @@
 from unittest import TestCase
 
 import product_aggregator.main as main
+import product_aggregator.offers_ms_config as offers_ms_config
 from product_aggregator.database import db
-from product_aggregator.model.product import Product
 from product_aggregator.model.offer import Offer
+from product_aggregator.model.product import Product
 
 product_data_in_testing_database = [
     {"name": "name01", "description": "description01"},
@@ -43,6 +44,9 @@ class TestAPIOperationsBaseClass(TestCase):
     def setUp(self):
         self.app = main.create_app("testing_database.db")
         self.app.config['TESTING'] = True
+
+        # use invalid access token in communication with offers microservise during tests
+        offers_ms_config.OFFERS_MS_ACCESS_TOKEN = "INVALID_ACCESS_TOKEN"
 
         init_database(db)
 
