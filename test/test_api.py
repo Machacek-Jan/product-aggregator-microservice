@@ -101,11 +101,13 @@ class TestProductsAPIOperations(TestAPIOperationsBaseClass):
             self.endpoint, json={'description': 'new_description'})
 
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message']['name'], "Name of the product is required")
 
     def test_post_product_without_description_fail(self):
         response = self.client.post(self.endpoint, json={'name': 'new_name'})
 
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message']['description'], "Description of the product is required")
 
     def test_post_product_empty_product_fail(self):
         response = self.client.post(self.endpoint, json={})
@@ -136,48 +138,47 @@ class TestProductAPIOperations(TestAPIOperationsBaseClass):
         self.assertEqual(response.json['message'], "Product does not exist")
 
     # ---------------------------------------------
-    # Patch product tests
+    # Put product tests
     # ---------------------------------------------
-    def test_patch_product_set_new_name_valid_request_success(self):
-        new_name = 'test_new_name'
-        response = self.client.patch(
-            self.endpoint_with_existing_id,
-            json={'name': new_name}
-        )
-
-        self.assertEqual(response.status_code, 205)
-        self.assertEqual(response.json['id'], self.existing_product_id)
-        self.assertEqual(response.json['name'], new_name)
-
-    def test_patch_product_set_new_description_valid_request_success(self):
-        new_description = 'test_new_desription'
-        response = self.client.patch(
-            self.endpoint_with_existing_id,
-            json={'description': new_description}
-        )
-
-        self.assertEqual(response.status_code, 205)
-        self.assertEqual(response.json['id'], self.existing_product_id)
-        self.assertEqual(response.json['description'], new_description)
-
-    def test_patch_product_set_new_name_and_description_valid_request_success(self):
-        new_name = 'test_new_name'
-        new_description = 'test_new_desription'
-        response = self.client.patch(
+    def test_put_product_valid_request_success(self):
+        new_name = 'new_name'
+        new_description = 'new_desription'
+        response = self.client.put(
             self.endpoint_with_existing_id,
             json={'name': new_name, 'description': new_description}
         )
 
-        self.assertEqual(response.status_code, 205)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['id'], self.existing_product_id)
         self.assertEqual(response.json['name'], new_name)
         self.assertEqual(response.json['description'], new_description)
 
-    def test_patch_product_nonexisting_id_fail(self):
-        new_name = 'test_new_name'
-        response = self.client.patch(
-            self.endpoint_with_nonexisting_id,
+    def test_put_product_without_name_fail(self):
+        new_description = 'new_desription'
+        response = self.client.put(
+            self.endpoint_with_existing_id,
+            json={'description': new_description}
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message']['name'], "Name of the product is required")
+
+    def test_put_product_without_description_fail(self):
+        new_name = 'new_name'
+        response = self.client.put(
+            self.endpoint_with_existing_id,
             json={'name': new_name}
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message']['description'], "Description of the product is required")
+
+    def test_put_product_nonexisting_id_fail(self):
+        new_name = 'new_name'
+        new_description = 'new_desription'
+        response = self.client.put(
+            self.endpoint_with_nonexisting_id,
+            json={'name': new_name, 'description': new_description}
         )
 
         self.assertEqual(response.status_code, 404)
