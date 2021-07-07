@@ -9,7 +9,7 @@ class Offer(db.Model):
     __tablename__ = "Offer"
 
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey("Product.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("Product.id", onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     items_in_stock = db.Column(db.Integer, nullable=False)
 
