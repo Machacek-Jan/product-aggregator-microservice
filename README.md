@@ -24,7 +24,7 @@ conda activate <env-name>
 where \<env-name\> is the name of created virtual environment. 
   
 ### run application
-In this environment you can run this microservice from the root directory with command
+In this environment you can run this microservice from the project root directory with command
 ```
 python product_aggregator/main.py
 ```
@@ -33,7 +33,7 @@ You can also run tests in this environment. To run tests, use command
 ```
 pytest -v --disable-pytest-warnings
 ```
-in the root directory.
+in the project root directory.
 
 ## JSON REST API documentation
 - ### create product -> POST /products
