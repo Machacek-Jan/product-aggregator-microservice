@@ -15,7 +15,7 @@ It was developed as an introductory assignment for Applifting company.
 ### environment setup
 Firstly, to use this application, you need a python environment with all dependencies from requirements.txt file. For example, you can use conda and easily create conda environment with the following conda command
 ```
-conda create --name <env-name> --file requirements.txt
+conda create --name <env-name> --file requirements.txt --channel conda-forge
 ```
 and then activate this environment with command
 ```
